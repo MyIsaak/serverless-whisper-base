@@ -1,4 +1,8 @@
-# 🍌 Banana Whisper LargeV2++
+# 🍌 Banana Whisper Base++
+
+> Note: This is a fork, all credits go to @Joemgu7
+> 
+> https://github.com/Joemgu7/serverless-whisper-large
 
 This is the ultimate production ready deployment of Whisper. It uses a custom build of Whisper, which is based on the latest Whisper release, but with a few modifications to make it run 10-20% faster than the stock whisper, without sacrificing quality of transcription 🤯
 

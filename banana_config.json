@@ -1,5 +1,5 @@
 {
-    "name": "Whisper LargeV2++",
+    "name": "Whisper Base++",
     "category": "Audio",
     "example_input": {
         "base64String":"<BASE64BYTESTRING>"

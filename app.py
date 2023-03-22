@@ -7,8 +7,7 @@ from io import BytesIO
 # Load your model to GPU as a global variable here using the variable name "model"
 def init():
     global model
-    model_name = os.getenv("MODEL_NAME")
-    model = whisper.load_model(model_name, device="cuda", in_memory=True, fp16=True)
+    model = whisper.load_model("base", device="cuda", in_memory=True, fp16=True)
 
 def _parse_arg(args : str, data : dict, default = None, required = False):
     arg = data.get(args, None)
