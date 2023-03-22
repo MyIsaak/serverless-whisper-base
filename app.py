@@ -1,3 +1,4 @@
+import requests
 import whisper
 import os
 import base64
@@ -26,18 +27,18 @@ def inference(model_inputs:dict) -> dict:
 
     # Parse out your arguments
     try:
-        BytesString = _parse_arg("base64String", model_inputs, required=True)
-        format = _parse_arg("format", model_inputs, "mp3")
+        url = _parse_arg("url", model_inputs, required=True)
+        audio_format = _parse_arg("format", model_inputs, "mp3")
         kwargs = _parse_arg("kwargs", model_inputs, {})
 
     except Exception as e:
         return {"error":str(e)}
-    
-    bytes = BytesIO(base64.b64decode(BytesString.encode("ISO-8859-1")))
 
-    tmp_file = "input."+format
-    with open(tmp_file,'wb') as file:
-        file.write(bytes.getbuffer())
+    audio_buffer = BytesIO(requests.get(url).content)
+
+    tmp_file = "input."+audio_format
+    with open(tmp_file, 'wb') as file:
+        file.write(audio_buffer.getbuffer())
     
     # Run the model
     result = model.transcribe(tmp_file, fp16=True, **kwargs)
