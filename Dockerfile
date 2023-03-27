@@ -1,29 +1,46 @@
-# Must use a Cuda version 11+
-FROM pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
+# Must use a Cuda version 11+ with cuBLAS 11.x and cuDNN 8.x as per the CTranslate2 docs
+# See: https://opennmt.net/CTranslate2/installation.html
+# It's highly recommended to use base images from Nvidia as they are optimized for these libraries
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
-WORKDIR /
+USER root
+WORKDIR /root
 
-# Install git
-RUN apt-get update && apt-get install -y git ffmpeg
+# Install Python 3.10
+RUN apt-get update && apt-get install -y \
+    python3.10 \
+    python3-pip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Poetry
+ENV PATH="$HOME/.poetry/bin:$PATH"
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    rm -rf ~/.cache/pip
+
+# Install cuBLAS 11.x
+RUN pip install nvidia-cublas-cu11 && \
+    rm -rf ~/.cache/pip
+
+# Install Git and FFmpeg for Whisper
+RUN apt-get update && apt-get install -y \
+    git ffmpeg && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install python packages
-RUN pip3 install --upgrade pip
-ADD requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+ADD pyproject.toml .
+ADD poetry.lock .
+RUN poetry install
 
-# We add the banana boilerplate here
+# Banana boilerplate
 ADD server.py .
 
-# Get the MODEL_NAME ARG from the docker build command
-ENV MODEL_NAME=large
-
-# Add your model weight files 
+# Model weight files
 # (in this case we have a python script)
 ADD download.py .
 RUN python3 download.py
 
-
-# Add your custom app code, init() and inference()
+# Custom app code, init() and inference()
 ADD app.py .
 
 EXPOSE 8000
