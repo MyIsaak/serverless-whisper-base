@@ -1,15 +1,10 @@
-# In this file, we define download_model
-# It runs during container build time to get model weights built into the container
-
-# In this example: A Huggingface BERT model
-
-import whisper
-import torch
-import os
+# This script is run during build-time to cache the model in the Docker image.
+from faster_whisper import WhisperModel
 
 
 def download_model():
-    model = whisper.load_model("base")
+    global model
+    model = WhisperModel("base")
 
 
 if __name__ == "__main__":
