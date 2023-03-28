@@ -1,5 +1,5 @@
 # This script is run during build-time to cache the model in the Docker image.
-import whisper
+import openai_whisper as whisper
 
 
 def download_model():

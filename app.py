@@ -1,5 +1,5 @@
 import os
-import whisper
+import openai_whisper as whisper
 import util
 
 
