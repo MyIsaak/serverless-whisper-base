@@ -1,10 +1,10 @@
 # This script is run during build-time to cache the model in the Docker image.
-from faster_whisper import WhisperModel
+import whisper
 
 
 def download_model():
     global model
-    model = WhisperModel("base")
+    model = whisper.load_model("base")
 
 
 if __name__ == "__main__":
