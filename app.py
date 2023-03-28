@@ -1,13 +1,13 @@
 import os
+import whisper
 import util
-from faster_whisper import WhisperModel
 
 
 # Init is run on server startup
 # Load your model to GPU as a global variable here using the variable name "model"
 def init():
     global model
-    model = WhisperModel("base", device="cuda", compute_type="float16")
+    model = whisper.load_model("base")
 
 
 # Inference is run for every server call
